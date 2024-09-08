@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{verbatim}
+
+\title{El Problema de la Suma de Subconjuntos es NP-Completo}
+\author{Carla Sunami Pérez Valera}
+\date{Septiembre 2024}
+
+\begin{document}
+
+\maketitle
+
+Problema de la Suma de Subconjuntos: Dados \( N \) enteros no negativos \( a_1 \ldots a_N \) y una suma objetivo \( K \), la tarea es decidir si existe un subconjunto con una suma igual a \( K \).
+
+Explicación: Una instancia del problema es una entrada especificada al problema. Una instancia del problema de la suma de subconjuntos es un conjunto \( S = \{a_1, \ldots, a_N\} \) y un entero \( K \). Dado que un problema NP-completo es un problema que está tanto en NP como en NP-hard, la prueba de que un problema es NP-Completo consta de dos partes:
+
+\begin{enumerate}
+    \item El problema en sí está en la clase NP.
+    \item Todos los demás problemas en la clase NP pueden reducirse en tiempo polinómico a ese problema. (Se denota como \( B \leq_P^C \) que \( B \) se reduce en tiempo polinómico a \( C \)).
+\end{enumerate}
+
+Si solo se satisface la segunda condición, entonces el problema se llama NP-Hard.
+
+Pero no siempre es posible reducir cada problema NP a otro problema NP para mostrar su NP-Completitud. Es por eso que si queremos mostrar que un problema es NP-Completo, simplemente mostramos que el problema está en NP y cualquier problema NP-Completo se puede reducir a ese, entonces hemos terminado, es decir, si \( B \) es NP-Completo y \( B \leq_P^C \) para \( C \) en NP, entonces \( C \) es NP-Completo. Por lo tanto, podemos verificar que el Problema de la Suma de Subconjuntos es NP-Completo usando las siguientes dos proposiciones:
+
+\section*{La Suma de Subconjuntos está en NP:}
+Si cualquier problema está en NP, entonces dado un certificado, que es una solución al problema y una instancia del problema (un conjunto \( S \) de enteros \( a_1 \ldots a_N \) y un entero \( K \)), podremos identificar (si la solución es correcta o no) el certificado en tiempo polinómico. Esto se puede hacer verificando que la suma de los enteros en el subconjunto \( S' \) sea igual a \( K \).
+
+\section*{La Suma de Subconjuntos es NP-Hard:}
+Para probar que la Suma de Subconjuntos es NP-Hard, realiza una reducción de un problema conocido como NP-Hard a este problema.
+Lleva a cabo una reducción desde la cual se puede reducir el Problema de Cubierta de Vértices al problema de la Suma de Subconjuntos. Supongamos un grafo \( G(V, E) \) donde \( V = \{1, 2, \ldots, N\} \). Ahora, para cada vértice \( i \), \( a_i = i \). Para cada arista \( (i, j) \) definimos un componente llamado \( b_{ij} \).
+Representaremos los enteros en formato de matriz, donde cada fila se expresa en la representación base-4 del valor entero correspondiente de \( |E| + 1 \) dígitos.
+La matriz tiene las siguientes propiedades:
+
+\begin{itemize}
+    \item La primera columna contiene un valor entero 1 para \( a_i \) y 0 para \( b_{ij} \).
+    \item Cada una de las columnas \( E \) comenzando desde el lado derecho de la matriz representa un dígito para cada arista. La columna \( (i, j) = 1 \) para \( a_i, a_j \) y \( b_{ij} \), de lo contrario, es igual a 0.
+    \item Definimos una constante \( k' \) tal que:
+    \[
+    k' = k(4^{|E|}) + \sum_{i=0}^{|E|-1} 2(4^{i})
+    \]
+\end{itemize}
+
+Ahora, se cumplen las siguientes proposiciones:
+
+\begin{enumerate}
+    \item Consideremos un subconjunto de vértices y aristas a \( (V', E') \) respectivamente, de modo que:
+    \[
+    \sum_{i \in V'} a_i + \sum_{(i, j) \in E'} b_{ij} = k'
+    \]
+    \item \( b_{ij} \) puede contener como máximo 1 en cada columna. Además, el parámetro \( k' \) tiene un 2 en todos los dígitos menos significativos hasta \( |E| \). Nunca tendremos un acarreo en estos dígitos. Ahora, estos dígitos suman como máximo tres 1's en cada columna. Esto implica que para cada arista \( (i, j) \), \( V' \) debe contener \( i \) o \( j \). Por lo tanto, \( V' \) se convierte en una cubierta de vértices.
+    \item Supongamos que hay una Cubierta de Vértices de tamaño \( k \), elegiremos enteros \( a_i \) tales que \( i \) se encuentre en \( V' \) y todos los \( b_{ij} \) tales que \( i \) o \( j \) estén en \( V' \). Al sumar todos estos enteros en representación base 4 (que elegimos de la matriz), obtenemos la suma de enteros \( = k' \). Por lo tanto, los enteros elegidos forman el subconjunto de enteros con suma \( = k' \). Por lo tanto, se cumple la suma de subconjuntos.
+\end{enumerate}
+
+Consideremos el siguiente ejemplo:
+Dado es una cubierta de vértices \( V = \{1, 3\} \) y \( k = 2 \).
+
+\begin{center}
+\begin{tabular}{ccccc}
+\( a_1 \) & \( a_2 \) & \( a_3 \) & \( a_4 \) \\
+\( 1 \) & \( 2 \) & \( 3 \) & \( 4 \)
+\end{tabular}
+\end{center}
+
+La matriz se puede construir de la siguiente manera:
+
+\begin{center}
+\begin{tabular}{cccccccc}
+\( a_1 \) & \( a_2 \) & \( a_3 \) & \( a_4 \) & \( b_{12} \) & \( b_{14} \) & \( b_{23} \) & \( b_{34} \) \\
+\( 1 \) & \( 0 \) & \( 0 \) & \( 0 \) & \( 1 \) & \( 1 \) & \( 1 \) & \( 1 \) \\
+\( 0 \) & \( 1 \) & \( 0 \) & \( 0 \) & \( 0 \) & \( 0 \) & \( 0 \) & \( 0 \) \\
+\( 0 \) & \( 0 \) & \( 1 \) & \( 0 \) & \( 0 \) & \( 0 \) & \( 0 \) & \( 0 \) \\
+\( 0 \) & \( 0 \) & \( 0 \) & \( 1 \) & \( 0 \) & \( 0 \) & \( 0 \) & \( 0 \)
+\end{tabular}
+\end{center}
+
+\[
+\begin{align*}
+k' &= k(4^{4}) + \sum_{i=0}^{3} 2(4^{i}) \\
+   &= 2(4^{4}) + 2(4^{0}) + 2(4^{1}) + 2(4^{2}) + 2(4^{3}) \\
+   &= 2(256 + 1 + 4 + 16 + 64) \\
+   &= 682
+\end{align*}
+\]
+
+Ahora, para probar el valor de \( k' \), elijamos \( a_i \) tal que \( i \) se encuentre en \( V' \), elegimos \( a_1 \) y \( a_3 \) y \( b_{ij} \) tal que \( i \) o \( j \) se encuentre en \( V' \), es decir, elegimos \( b_{12}, b_{14}, b_{23} \) y \( b_{34} \) de la matriz. En representación base 4, tenemos los siguientes valores:
+
+\[
+a_1 = 321, a_3 = 276, b_{12} = 64, b_{23} = 16, b_{14} = 1, b_{34} = 4
+\]
+
+Estos valores se calculan usando la matriz. Al sumar estos valores, obtenemos:
+
+\[
+k' = 321 + 276 + 64 + 16 + 1 + 4 = 682
+\]
+
+Por lo tanto, el valor de \( k' \) se puede calcular y verificar.
+
+En consecuencia, el Problema de la Suma de Subconjuntos es NP-Completo.
+
+\end{document}
