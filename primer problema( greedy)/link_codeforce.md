@@ -1,0 +1,1 @@
+[text](https://codeforces.com/contest/1479/submission/279895329)
